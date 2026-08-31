@@ -167,7 +167,66 @@ function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.re
 function openAdmin(){show('admin')}
 window.addEventListener('load',function(){if(location.hash==='#admin')show('admin')})
 function profile(n){document.getElementById('pname').textContent=n;document.getElementById('profileName').textContent=n;show('profile')}
-function saveRegistration(){let n=document.getElementById('rName').value.trim();if(!n){alert('कृपया नाम भरें');return}localStorage.setItem('mm_profile',JSON.stringify({name:n,location:document.getElementById('rLocation').value,edu:document.getElementById('rEdu').value,job:document.getElementById('rJob').value,about:document.getElementById('rAbout').value}));show('membership')}
+function saveRegistration(){async function saveRegistration(){
+  const name = document.getElementById('rName').value.trim();
+  const mobile = document.getElementById('rMobile').value.trim();
+  const age = document.getElementById('rAge').value;
+  const gender = document.getElementById('rGender').value;
+  const location = document.getElementById('rLocation').value.trim();
+  const society = document.getElementById('rSociety').value.trim();
+  const education = document.getElementById('rEdu').value.trim();
+  const occupation = document.getElementById('rJob').value.trim();
+  const about = document.getElementById('rAbout').value.trim();
+  const partner_preferences = document.getElementById('rPref').value.trim();
+
+  if(!name || !mobile){
+    alert('कृपया नाम और मोबाइल नंबर भरें');
+    return;
+  }
+
+  const data = {
+    name,
+    mobile,
+    age: age ? Number(age) : null,
+    gender,
+    location,
+    society,
+    education,
+    occupation,
+    about,
+    partner_preferences,
+    is_verified: false,
+    is_visible: true
+  };
+
+  try {
+    const response = await fetch(
+      SUPABASE_URL + '/rest/v1/profiles',
+      {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(data)
+      }
+    );
+
+    if(!response.ok){
+      const error = await response.text();
+      alert('Profile save नहीं हुआ: ' + error);
+      return;
+    }
+
+    alert('Profile सफलतापूर्वक save हो गया! 🎉');
+    show('membership');
+
+  } catch(error) {
+    alert('Internet/Supabase connection में समस्या है');
+  }
+}}
 function activate(){if(!document.getElementById('terms').checked){alert('पहले Membership Terms स्वीकार करें');return}alert('Prototype only: payment gateway अभी connected नहीं है। Production में server-side payment verification जरूरी है।');show('search')}
 function openEdit(){let p=JSON.parse(localStorage.getItem('mm_profile')||'{}');document.getElementById('eName').value=p.name||'';document.getElementById('eLocation').value=p.location||'';document.getElementById('eEdu').value=p.edu||'';document.getElementById('eJob').value=p.job||'';document.getElementById('eAbout').value=p.about||'';show('edit')}
 function saveEdit(){let p=JSON.parse(localStorage.getItem('mm_profile')||'{}');p.name=document.getElementById('eName').value.trim();p.location=document.getElementById('eLocation').value.trim();p.edu=document.getElementById('eEdu').value.trim();p.job=document.getElementById('eJob').value.trim();p.about=document.getElementById('eAbout').value.trim();localStorage.setItem('mm_profile',JSON.stringify(p));document.getElementById('saved').textContent='✓ Changes saved on this device (prototype)';document.getElementById('saved').style.display='block';show('settings')}
