@@ -161,7 +161,8 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radiu
 </main>
 <nav class="nav"><button onclick="show('home')">⌂<br>Home</button><button onclick="show('search')">🔎<br>Search</button><button onclick="show('interests')">❤️<br>Interest</button><button onclick="show('messages')">💬<br>Messages</button><button onclick="show('settings')">☰<br>Profile</button><button onclick="openAdmin()">🛡️<br>Admin</button></nav>
 </div>
-<script>
+<script>const SUPABASE_URL = 'https://klefbzjxbdkktgxlijyr.supabase.co/rest/v1/';
+const SUPABASE_KEY = 'sb_publishable_0Xzg9n5hDzGZZZ3hZOdnDA_Ghf6298Q';
 function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));let el=document.getElementById(id);if(el){el.classList.add('active');scrollTo(0,0)}}
 function openAdmin(){show('admin')}
 window.addEventListener('load',function(){if(location.hash==='#admin')show('admin')})
