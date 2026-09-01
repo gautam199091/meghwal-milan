@@ -167,7 +167,7 @@ function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.re
 function openAdmin(){show('admin')}
 window.addEventListener('load',function(){if(location.hash==='#admin')show('admin')})
 function profile(n){document.getElementById('pname').textContent=n;document.getElementById('profileName').textContent=n;show('profile')}
-function saveRegistration(){async function saveRegistration(){
+async function saveRegistration(){
   const name = document.getElementById('rName').value.trim();
   const mobile = document.getElementById('rMobile').value.trim();
   const age = document.getElementById('rAge').value;
